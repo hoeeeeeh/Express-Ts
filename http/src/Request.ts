@@ -1,4 +1,4 @@
-import { SocketRequest } from './utils/httpParser';
+import { SocketRequest } from '../../express/src/utils/httpParser';
 
 const Method = ['GET', 'POST', 'PUT', 'DELETE'];
 
@@ -14,7 +14,7 @@ interface Header {
  * query : ? 이후
  */
 
-class ExpressRequest {
+class Request {
   headers?: Header;
 
   body: string | object = '';
@@ -105,4 +105,4 @@ class ExpressRequest {
   }
 }
 
-export { ExpressRequest, Method, Protocol };
+export { Request, Method, Protocol };

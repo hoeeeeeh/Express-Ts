@@ -3,13 +3,13 @@ import fs from 'fs';
 import path from 'path';
 import { parseHttpRequest, SocketRequest } from './utils/httpParser';
 import { Layer, NextFunction } from './Layer';
-import { ExpressResponse } from './ExpressResponse';
-import { ExpressRequest } from './ExpressRequest';
+import { } from 'http';
+import { Request } from '../../http/src/Request';
 
 class Express {
   private readonly layerStack: Layer[] = [];
 
-  use(path: string, method: string, middleware: (req: ExpressRequest, res: ExpressResponse, next: NextFunction) => void) {
+  use(path: string, method: string, middleware: (req: Request, res: Response, next: NextFunction) => void) {
     let p = path;
     if (path === '/') p = '';
 
@@ -19,7 +19,7 @@ class Express {
   listen(port: number, callback: () => void) {
     const server = net.createServer((socket) => {
       socket.on('data', (data) => {
-        const res = new ExpressResponse(socket);
+        const res = new Response(socket);
         const socketRequest = parseHttpRequest(data.toString());
         this.handleRequest(socketRequest, res);
       });
@@ -38,7 +38,7 @@ class Express {
 
   // app.use('/static', Express.static(__dirname + path);
   static static(filePath: string) {
-    return (req: ExpressRequest, res: ExpressResponse, next: NextFunction) => {
+    return (req: Request, res: Response, next: NextFunction) => {
       if (req.path === '/') req.setUrl('/index.html');
       const staticPath = `${filePath}${req.path}`;
       fs.readFile(staticPath, (err, data) => {
@@ -55,17 +55,17 @@ class Express {
     };
   }
 
-  private handleNotFoundRequest(res: ExpressResponse) {
+  private handleNotFoundRequest(res: Response) {
     if (!res.isAlreadySent) {
       res.status(404).send('Not found');
     }
   }
 
-  private handleError(err: Error, res: ExpressResponse) {
+  private handleError(err: Error, res: Response) {
     res.status(400).send(err.message);
   }
 
-  private handleRequest(req: SocketRequest, res: ExpressResponse) {
+  private handleRequest(req: SocketRequest, res: Response) {
     let index = -1; // 초기화, 첫 번째 미들웨어는 index 0부터 시작
 
     const next = (err?: Error) => {

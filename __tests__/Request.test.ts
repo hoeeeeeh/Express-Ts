@@ -1,11 +1,11 @@
-import { ExpressRequest, Method, Protocol } from '../ExpressRequest'; // 경로에 맞게 수정
+import { Request, Method, Protocol } from '../http/src/Request'; // 경로에 맞게 수정
 
 describe('Request Class', () => {
-  let req: ExpressRequest;
+  let req: Request;
 
   // 매번 새로운 Request 객체를 생성하여 초기화
   beforeEach(() => {
-    req = new ExpressRequest();
+    req = new Request();
   });
 
   test('should set and get headers correctly', () => {

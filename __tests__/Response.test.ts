@@ -1,13 +1,13 @@
-import { ExpressResponse } from '../ExpressResponse';
+import { Response } from '../http/src/Response';
 import { SocketMock } from './mocks/Socket.mock';
 
 describe('Response class', () => {
   let socketMock: SocketMock;
-  let response: ExpressResponse;
+  let response: Response;
 
   beforeEach(() => {
     socketMock = new SocketMock();
-    response = new ExpressResponse(socketMock as any);
+    response = new Response(socketMock as any);
   });
 
   test('should set the status code and message correctly', () => {

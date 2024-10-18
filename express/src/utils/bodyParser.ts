@@ -1,4 +1,4 @@
-import { User } from '../../src/model/dto/UserDTO';
+import { User } from '../model/dto/UserDTO';
 
 function parseUserBody(body: string) {
   const attributeChecker: User = {

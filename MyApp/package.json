@@ -1,0 +1,38 @@
+{
+  "dependencies": {
+    "babel": "^6.23.0",
+    "dotenv": "^16.4.5",
+    "moment": "^2.30.1",
+    "moment-timezone": "^0.5.45",
+    "mysql2": "^3.11.3",
+    "path-to-regexp": "^8.2.0",
+    "typescript": "^5.6.2",
+    "winston": "^3.14.2",
+    "winston-daily-rotate-file": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=8.3.0"
+  },
+  "scripts": {
+    "compile": "npx tsc express/src/views/**/*.ts",
+    "start": "NODE_ENV=development npx tsx app.ts",
+    "test": "NODE_ENV=test npx tsx app.ts",
+    "js-test": "../node_modules/.bin/jest --config jest.config.json"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.25.2",
+    "@babel/preset-env": "^7.25.4",
+    "@babel/preset-typescript": "^7.24.7",
+    "@types/jest": "^29.5.13",
+    "@typescript-eslint/eslint-plugin": "^8.6.0",
+    "@typescript-eslint/parser": "^8.6.0",
+    "eslint": "^8.57.1",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.30.0",
+    "eslint-plugin-node": "^11.1.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
+    "tsx": "^4.19.1"
+  },
+  "type": "module"
+}

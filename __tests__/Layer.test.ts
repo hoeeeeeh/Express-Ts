@@ -1,12 +1,12 @@
-import { ExpressRequest } from '../ExpressRequest';
-import { ExpressResponse } from '../ExpressResponse';
-import { Layer } from '../Layer'; // Layer 클래스를 불러옵니다.
+import { Request } from '../http/src/Request';
+import { Response } from '../http/src/Response';
+import { Layer } from '../express/src/Layer'; // Layer 클래스를 불러옵니다.
 
 type NextFunction = (err?: any) => void;
 
 describe('Layer class', () => {
-  let mockRequest: Partial<ExpressRequest>;
-  let mockResponse: Partial<ExpressResponse>;
+  let mockRequest: Partial<Request>;
+  let mockResponse: Partial<Response>;
   let nextFunction: NextFunction;
 
   beforeEach(() => {

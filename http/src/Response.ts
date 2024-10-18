@@ -1,7 +1,6 @@
 import { Socket } from 'net';
-import { logger } from '../Logger/logger';
-import { StatusCode } from './constant/StatusCode';
-import { getContentType } from './utils/mimeType';
+import { StatusCode } from '../../express/src/constant/StatusCode';
+import { getContentType } from '../../express/src/utils/mimeType';
 
 type HeaderKeys =
   | 'Content-Type'
@@ -42,7 +41,7 @@ interface Cookies {
   [key: string]: string;
 }
 
-class ExpressResponse {
+class Response {
   private socket: Socket;
 
   statusCode: StatusCode = StatusCode.OK;
@@ -99,7 +98,6 @@ class ExpressResponse {
       this.socket.end();
     } catch (error: any) {
       this.isAlreadySent = false;
-      logger.error(`Failed to send response: ${error.message}`);
       throw error;
     }
   }
@@ -182,7 +180,7 @@ class ExpressResponse {
   /**
    * 추후에 session ID 같은 것을 구현하기 위해서 정의해두었습니다.
    * 아직까지는 전부 다 구현하지 못했습니다.
-   * @returns ExpressResponse
+   * @returns Response
    * @param name
    * @param value
    */
@@ -196,4 +194,4 @@ class ExpressResponse {
   }
 }
 
-export { ExpressResponse };
+export { Response };
