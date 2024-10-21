@@ -7,21 +7,17 @@ type NextFunction = (err?: any) => void;
 type MiddlewareFunction = (req: Request, res: Response, next: NextFunction) => void | Promise<void>;
 
 interface Middleware {
-  GET : MiddlewareFunction,
-  POST : MiddlewareFunction,
-  PUT : MiddlewareFunction,
-  DELETE : MiddlewareFunction,
+  GET : MiddlewareFunction[],
+  POST : MiddlewareFunction[],
+  PUT : MiddlewareFunction[],
+  DELETE : MiddlewareFunction[],
 }
 
 // Layer 클래스 정의
 class Layer {
-  // private middleware: Middleware;
+  private middleware: Middleware = { GET: [], POST: [], PUT: [], DELETE: [] };
 
   private path: string;
-
-  private readonly method: string;
-
-  private readonly handle: MiddlewareFunction;
 
   private readonly regexp?: RegExp; // 경로를 정규식으로 변환한 값
 
@@ -29,14 +25,8 @@ class Layer {
 
   private readonly keys: Array<Key>;
 
-  constructor(
-    path: string,
-    method: string,
-    handle: (req: Request, res: Response, next: NextFunction) => void,
-  ) {
+  constructor(path: string) {
     this.path = path;
-    this.method = method;
-    this.handle = handle;
     const {
       regexp,
       keys,
@@ -45,26 +35,41 @@ class Layer {
     this.regexp = regexp;
     this.keys = keys;
     this.params = undefined;
+  }
 
-    // const defaultMiddleware: MiddlewareFunction =
-    // (req: Request, res: Response, next: NextFunction) => {};
-    //
-    // this.middleware = {
-    //   GET: defaultMiddleware,
-    //   POST: defaultMiddleware,
-    //   PUT: defaultMiddleware,
-    //   DELETE: defaultMiddleware,
-    // };
+  use(middleware: MiddlewareFunction) {
+    this.get(middleware);
+    this.post(middleware);
+    this.put(middleware);
+    this.delete(middleware);
+  }
+
+  get(middleware: MiddlewareFunction) {
+    this.middleware.GET.push(middleware);
+  }
+
+  post(middleware: MiddlewareFunction) {
+    this.middleware.POST.push(middleware);
+  }
+
+  put(middleware: MiddlewareFunction) {
+    this.middleware.POST.push(middleware);
+  }
+
+  delete(middleware: MiddlewareFunction) {
+    this.middleware.DELETE.push(middleware);
+  }
+
+  handle(req: Request, res: Response, next: NextFunction) {
+    if(!req.method || !(req.method in this.middleware)) return;
+    const method = req.method as keyof Middleware;
+    this.middleware[method].forEach((middleware)=> middleware(req, res, next));
   }
 
   handleRequest(socketRequest: SocketRequest, res: Response, next: NextFunction): void | Promise<void>;
-
-
-
-
   handleRequest(socketRequest: SocketRequest, expressResponse: Response, next: NextFunction) {
     const match = this.regexp?.test(socketRequest.url);
-    if (this.isInvalidMethod(socketRequest) || !match) {
+    if (!match) {
       return next();
     }
 
@@ -79,10 +84,6 @@ class Layer {
     }
 
     return this.handle(expressRequest, expressResponse, next);
-  }
-
-  private isInvalidMethod(req: SocketRequest) {
-    return req.method.toUpperCase() !== this.method.toUpperCase();
   }
 
   private handleError(

@@ -6,14 +6,39 @@ import { Layer, NextFunction } from './Layer';
 import { Request, Response } from 'http';
 
 class Express {
+  private readonly layerIndex: { [key: string]: number } = {};
   private readonly layerStack: Layer[] = [];
 
-  use(path: string, method: string, middleware: (req: Request, res: Response, next: NextFunction) => void) {
+  getLayerIndex(path: string){
     let p = path;
     if (path === '/') p = '';
-
-    this.layerStack.push(new Layer(p, method, middleware));
+    if(!(p in this.layerStack)) {
+      this.layerIndex[p] = this.layerStack.length;
+      this.layerStack.push(new Layer(p));
+    }
+    return this.layerIndex[p];
   }
+
+  use(path: string, middleware: (req: Request, res: Response, next: NextFunction) => void) {
+    const layerIdx = this.getLayerIndex(path);
+    this.layerStack[layerIdx].use(middleware);
+  }
+
+  post(path: string, middleware: (req: Request, res: Response, next: NextFunction) => void) {
+    const layerIdx = this.getLayerIndex(path);
+    this.layerStack[layerIdx].post(middleware);
+  }
+
+  put(path: string, middleware: (req: Request, res: Response, next: NextFunction) => void) {
+    const layerIdx = this.getLayerIndex(path);
+    this.layerStack[layerIdx].put(middleware);
+  }
+
+  delete(path: string, middleware: (req: Request, res: Response, next: NextFunction) => void) {
+    const layerIdx = this.getLayerIndex(path);
+    this.layerStack[layerIdx].delete(middleware);
+  }
+
 
   listen(port: number, callback: () => void) {
     const server = net.createServer((socket) => {
