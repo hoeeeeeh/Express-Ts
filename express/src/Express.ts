@@ -9,7 +9,7 @@ class Express {
   private readonly layerIndex: { [key: string]: number } = {};
   private readonly layerStack: Layer[] = [];
 
-  getLayerIndex(path: string){
+  private getLayerIndex(path: string){
     let p = path;
     if (path === '/') p = '';
     if(!(p in this.layerStack)) {
@@ -23,6 +23,12 @@ class Express {
     const layerIdx = this.getLayerIndex(path);
     this.layerStack[layerIdx].use(middleware);
   }
+
+  get(path: string, middleware: (req: Request, res: Response, next: NextFunction) => void) {
+    const layerIdx = this.getLayerIndex(path);
+    this.layerStack[layerIdx].get(middleware);
+  }
+
 
   post(path: string, middleware: (req: Request, res: Response, next: NextFunction) => void) {
     const layerIdx = this.getLayerIndex(path);
