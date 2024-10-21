@@ -3,8 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { parseHttpRequest, SocketRequest } from './utils/httpParser';
 import { Layer, NextFunction } from './Layer';
-import { } from 'http';
-import { Request } from '../../http/src/Request';
+import { Request, Response } from 'http';
 
 class Express {
   private readonly layerStack: Layer[] = [];

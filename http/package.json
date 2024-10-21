@@ -4,12 +4,15 @@
   "main": "src/index.ts",
   "dependencies": {
     "babel": "^6.23.0",
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "path-to-regexp": "^8.2.0"
   },
   "engines": {
     "node": ">=8.3.0"
   },
-  "scripts": {},
+  "scripts": {
+    "build": "webpack"
+  },
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@babel/preset-env": "^7.25.4",
@@ -25,10 +28,7 @@
     "ts-jest": "^29.2.5",
     "ts-loader": "^9.5.1",
     "tsx": "^4.19.1",
-    "typescript": "^5.6.3",
-    "webpack": "^5.95.0",
-    "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^5.1.0"
+    "typescript": "^5.6.3"
   },
   "type": "module"
 }

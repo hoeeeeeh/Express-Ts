@@ -1,7 +1,6 @@
 import { URL } from 'url';
 import { parse as parseQuery } from 'querystring';
 import { Keys } from 'path-to-regexp';
-import { logger } from '../../Logger/logger';
 import { getContentType } from './mimeType';
 
 interface SocketRequest {
@@ -20,7 +19,6 @@ interface SocketRequest {
 function parseHttpRequest(rawData: string): SocketRequest {
   const [rawHeaders, parsedBody] = rawData.split('\r\n\r\n');
   const headerLines = rawHeaders.split('\r\n');
-  logger.info((headerLines[0]));
   const statusLine = headerLines.shift();
   const [method, url, protocolWithVersion] = statusLine?.split(' ') || [];
   const [protocol, version] = protocolWithVersion?.split('/') || [];
@@ -55,7 +53,7 @@ function parseUrl(url: string, regexp: RegExp, keys: Keys) {
 
   const params: { [key: string]: string } = {};
   if (match) {
-    keys.forEach((key, index) => {
+    keys.forEach((key: { name: string | number; }, index: number) => {
       params[key.name] = match[index + 1];
     });
   }
